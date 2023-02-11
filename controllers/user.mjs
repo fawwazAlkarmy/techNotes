@@ -38,9 +38,9 @@ export const createNewUser = expressAsyncHandler(async (req, res) => {
 });
 
 export const updateUser = expressAsyncHandler(async (req, res) => {
-  const { id, username, roles, active } = req.body;
+  const { id } = req.params;
+  const { username, roles, active } = req.body;
   if (
-    !id ||
     !username ||
     !Array.isArray(roles) ||
     !roles.length ||
@@ -48,21 +48,21 @@ export const updateUser = expressAsyncHandler(async (req, res) => {
   ) {
     throw new BadRequestError("Please provide all values");
   }
-  const user = await User.findById(id).exec();
+  const user = await User.findByIdAndUpdate(id, {
+    username,
+    roles,
+    active,
+  }).exec();
 
   if (!user) {
     throw new BadRequestError("User was not found");
   }
 
-  user.username = username;
-  user.roles = roles;
-  user.active = active;
-  const updatedUser = await user.save();
-  res.json({ updatedUser });
+  res.json({ msg: "User updated" });
 });
 
 export const deleteUser = expressAsyncHandler(async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   if (!id) {
     throw new BadRequestError("Please provide user id");
   }

@@ -9,6 +9,7 @@ import "express-async-errors";
 import errorHandler from "./middleware/errorHandler.mjs";
 import { connectDB } from "./db/connect.mjs";
 import { userRouter } from "./routes/user.mjs";
+import { noteRouter } from "./routes/note.mjs";
 
 // initialize app and port
 const port = process.env.PORT;
@@ -21,7 +22,7 @@ app.use(express.json());
 
 // routes
 app.use("/api/v1/users", userRouter);
-// app.use("/api/v1/notes");
+app.use("/api/v1/notes", noteRouter);
 
 // custom middleware
 app.use(errorHandler);
